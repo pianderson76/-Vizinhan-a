@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>+ Vizinhança</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            text-align: center;
+            background: url('fundo.png') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        h1 {
+            font-size: 4vw;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .plus {
+            display: inline-block;
+            color: #ff4f4f;
+            font-size: 4.5rem;
+            transition: transform 0.5s, color 0.5s;
+        }
+        .plus.animate {
+            transform: scale(1.5) rotate(15deg);
+            color: #4fafff;
+        }
+        .loading {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #4fafff;
+            border-radius: 50%;
+            border-top: 5px solid #ff4f4f;
+            animation: spin 1s linear infinite;
+            display: block;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .interface, .episodes, .video-player {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .interface.show, .episodes.show, .video-player.show {
+            display: block;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #ff4f4f;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .back-btn:hover {
+            background: #4fafff;
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .category {
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-align: center;
+            max-width: 200px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .category:hover { transform: scale(1.05); box-shadow: 0 6px 12px rgba(0,0,0,0.7); }
+        .category img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .episodes {
+            background: url('dewd.jfif') center center / cover no-repeat;
+            padding-top: 50px;
+            text-align: center;
+        }
+        .episodes h2 {
+            font-size: 2rem;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .episode-button {
+            display: inline-block;
+            margin-top: 15px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: 1px solid #4fafff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .episode-button:hover { background-color: #555; }
+        .video-player video {
+            width: 100%;
+            max-width: 80%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.7);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 6vw;
+            }
+            .content {
+                margin-top: 20px;
+                flex-direction: column;
+                align-items: center;
+            }
+            .category {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+            .episode-button {
+                width: 80%;
+            }
+            .video-player video {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 7vw;
+            }
+            .content {
+                margin-top: 10px;
+            }
+            .category {
+                width: 90%;
+            }
+            .episode-button {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1><span class="plus">+</span> Vizinhança</h1>
+<div class="loading"></div>
+
+<!-- Interface inicial -->
+<div class="interface">
+    <h1><span class="plus">+</span> Vizinhança</h1>
+    <div class="content">
+        <div class="category" onclick="showEpisodes('chaves')">
+            <h2>Chaves</h2>
+            <img src="ch1p.jpg" alt="Chaves">
+        </div>
+        <div class="category" onclick="showEpisodes('chapolin')">
+            <h2>Chapolin</h2>
+            <img src="ch2p.jpg" alt="Chapolin">
+        </div>
+    </div>
+</div>
+
+<!-- Tela de Episódios -->
+<div class="episodes">
+    <button class="back-btn" onclick="showInterface()">Voltar</button>
+    <h2 id="episode-title">Escolha um Episódio</h2>
+    <div id="episodes-list"></div>
+</div>
+
+<!-- Player de Vídeo -->
+<div class="video-player">
+    <button class="back-btn" onclick="showInterface()">Voltar</button>
+    <video id="video" controls></video>
+</div>
+
+<script>
+    const plus = document.querySelector('.plus');
+    const loading = document.querySelector('.loading');
+    const interfaceSection = document.querySelector('.interface');
+    const episodes = document.querySelector('.episodes');
+    const videoPlayer = document.querySelector('.video-player');
+    const video = document.querySelector('#video');
+    const episodeTitle = document.querySelector('#episode-title');
+    const episodesList = document.querySelector('#episodes-list');
+    const videoTitle = document.querySelector('#video-title');
+
+    let currentShow = '';
+
+    setInterval(() => {
+        plus.classList.toggle('animate');
+    }, 1000);
+
+    setTimeout(() => {
+        loading.style.display = 'none';
+        interfaceSection.classList.add('show');
+    }, 13000);
+
+    function showInterface() {
+        episodes.classList.remove('show');
+        videoPlayer.classList.remove('show');
+        interfaceSection.classList.add('show');
+    }
+
+    function showEpisodes(show) {
+        currentShow = show;
+        interfaceSection.classList.remove('show');
+        episodes.classList.add('show');
+        if (show === 'chaves') {
+            episodeTitle.textContent = 'Chaves Temporada 1';
+            episodesList.innerHTML = `
+                <div class="episode-button" onclick="playVideo('ch1.mp4')">Episódio 1</div>
+                <div class="episode-button" onclick="playVideo('ch2.mp4')">Episódio 2</div>
+                <div class="episode-button" onclick="playVideo('ch3.mp4')">Episódio 3</div>
+            `;
+        } else if (show === 'chapolin') {
+            episodeTitle.textContent = 'Chapolin Temporada 1';
+            episodesList.innerHTML = `
+                <div class="episode-button" onclick="playVideo('cha1.mp4')">Episódio 1</div>
+                <div class="episode-button" onclick="playVideo('cha2.mp4')">Episódio 2</div>
+                <div class="episode-button" onclick="playVideo('cha3.mp4')">Episódio 3</div>
+            `;
+        }
+    }
+
+    function playVideo(filename) {
+        episodes.classList.remove('show');
+        videoPlayer.classList.add('show');
+        video.src = filename;
+        video.play();
+        videoTitle.textContent = `Assistindo: ${filename.replace('.mp4', '')}`;
+    }
+</script>
+
+</body>
+</html>
